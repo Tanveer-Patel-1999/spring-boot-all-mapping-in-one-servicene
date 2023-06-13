@@ -1,0 +1,84 @@
+spring jpa : java persistance API 
+==========
+
+q: why we used jpa?
+-->  to work with relational databases in Java-based applications.
+
+
+step :
+1 : create a spring boot project 
+
+2 : required the belowe dependecy
+--------------------------------
+1 : spring-boot-starter-web
+2 : spring-boot-starter-data-jpa
+3 : postgresql
+
+3 : create an entity classes
+----------------------------
+--> annotated a java class with @Entity
+--> @Entity : entity classes are used to represent a table in your database.
+--> In Entity class we used applications @Id, @Table , @Columns
+
+4 : configure the database connection in the application.properties file
+------------------------------------------------------------------------
+--> in application.properties we required following thing to establish the connection
+1 : url 
+2 : username
+3 : password
+4 : database driver class:
+5 : Customize the JPA configuration:-> is Optional 
+
+spring.datasource.url=jdbc:postgresql://localhost/oneToOne
+spring.datasource.username=postgres
+spring.datasource.password=123456
+spring.datasource.driverClassName=org.postgresql.Driver
+
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+
+5 : define a repository Interface with the same Entity class name 
+-----------------------------------------------------------------
+--> annotated a repository interface with the @Repository 
+--> relationalInterface it extend JpaRepository or CURD Repository 
+--> JpaRepository<> take two parameters : 1 : Entityname and 2 : primary Id type : Long
+
+6 : create a controller class
+-----------------------------
+--> controller class is used to handle the HTTP request.
+
+7: create a service class 
+-------------------------
+--> In service class we perform CURD Operation.
+--> create an object of RepositoryInterfce in the service class.
+
+@Repository
+public interface StudentEntityRepository extends JpaRepository<StudentEntity, Long> {
+}
+
+
+Q : method present in JpaRepository?
+-->
+1 : save(): Saves an entity to the database. This method is used to create or update an entity.
+	repository.save(entity_object);
+	
+2 : deleteById(): Deletes an entity from the database based on its primary key.
+	B : repository.deleteById(id);
+	
+3 : delete(): Deletes an entity from the database.	
+	A : repository.delete(entity_object);
+	
+4 : findById(): Retrieves an entity from the database based on its primary key.
+	A : repository.findById(ID id);
+	
+5 : findAll(): Retrieves all entities of a specific type from the database.
+	B : repository.findAll();
+	
+6 : count(): Returns the total number of entities of a specific type in the database.
+	long repository.count();
+	
+7 : existsById(): Checks if an entity with a given primary key exists in the database.
+	boolean existsById(ID id);
+
+
+

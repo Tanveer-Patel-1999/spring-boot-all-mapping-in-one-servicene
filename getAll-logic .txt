@@ -1,0 +1,47 @@
+
+
+    public List<PersonRequest> getAll() {
+        return personRepository.findAll().stream()
+                .map(personEntity -> {
+                    PersonRequest personRequest = new PersonRequest();
+                    personRequest.setFirstName(personEntity.getFirstName());
+                    personRequest.setLastName(personEntity.getLastName());
+                    personRequest.setAge(personEntity.getAge());
+                    return personRequest;
+                })
+                .collect(Collectors.toList());
+    }
+	
+//    public List<PersonRequest> getAll() {
+//        List<PersonEntity> personEntities = personRepository.findAll();
+//        List<PersonRequest> personRequests = new ArrayList<>();
+//
+//        for (PersonEntity personEntity : personEntities) {
+//            PersonRequest personRequest = new PersonRequest();
+//            personRequest.setFirstName(personEntity.getFirstName());
+//            personRequest.setLastName(personEntity.getLastName());
+//            personRequest.setAge(personEntity.getAge());
+//            personRequests.add(personRequest);
+//        }
+//
+//        return personRequests;
+//    }
+
+
+
+//    public List<PersonRequest> getAll() {
+//        return personRepository.findAll().stream()
+//                .map(this::convertToPersonRequest)
+//                .collect(Collectors.toList());
+//    }
+//
+//    private PersonRequest convertToPersonRequest(PersonEntity personEntity) {
+//        PersonRequest personRequest = new PersonRequest();
+//        personRequest.setFirstName(personEntity.getFirstName());
+//        personRequest.setLastName(personEntity.getLastName());
+//        personRequest.setAge(personEntity.getAge());
+//        return personRequest;
+//    }
+
+
+

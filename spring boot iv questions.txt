@@ -1,0 +1,217 @@
+1 . What is Spring Boot ? Why did you use sprinig boot in your project ? 
+ why not spring?
+
+What -> Spring Boot is a spring module.
+     -> Elaborating - Spring boot is framework and embeded application server(like tomcat , jetty).
+
+Why -> It provides RAD -> Rapid application development.
+
+How -> t helps us in creating efficient fast stand-alone applications which you can just run it
+basically removes a lot of configurations and dependencies
+
+2 . What RAD that you are talking about ? How can you achieve RAD using Spring Boot
+
+-> RAD is modified Waterfall model which focuses on developing software in a short
+span of time
+
+-> Phases of RAD are as follows:
+
+Bussiness Modelling  -> Bussiness model is designed for the product to be developed
+
+Data Modelling -> Data model is designed, The relation between these data objects are 
+established using info gathered in the first phase
+
+Process Modelling -> Process model is designed . Process description for adding, deleting,
+retriving or modifying a data object are given
+
+Application Generation -> The actual product is built using code. Convert process and data 
+models into actual prototypes
+
+Testing and TurnOver -> Product is tested and if changes are required then whole process
+starts again
+
+3 . Is this possible to change the port of Embedded Tomcat server in Spring boot?
+
+-> Put server.port properties in application.properties
+
+4 . Can we override or replace the Embedded Tomcat server in Sping Boot ?
+
+-> Yes, we can replace the embedded tomcat with any other servers by using the starter dependencies 
+Like - you can use spring-boot-starter-jetty as a dependency for each project as you need put tomcat in the exclusion tag.
+
+5 . Can we disable the default web server in the Spring Boot application ?
+
+-> The major strong point in spring is to provide flexibility to build your application lossely coupled.
+Spring provides features to disable the web server in a quick configuration.
+Yes ,  we can use the application properties to configure the web application type , i .e spring.main.web-appliction-type = none
+
+6 . How to disable a specific auto-configuration class ?
+
+-> You can use the exclude attribute of @EnableAutoConfiguration, if you find any specific auto-configuration classes that you do not 
+want are being applied
+
+-> @EnableAutoConfiguration(exclude ={DataSourceAutoConfiguration.class})
+
+7 . What does the @SpringBootApplication annotation do internally ?
+
+-> As per the spring boot doc , the @SpringBootApplication annotation is equivalent to using @Configuration, @EnableAutoConfiguration
+and @ComponentScan with their default attributes. Spring Boot enables the developer to use a single annotation instead of using multiple.
+But, as we know , spring provided lossely coupled features that we can use for each individual annotation as per our project needs
+
+8 . How to use a property defined in application.properties file into your java class ?
+
+-> Use the @Value annotation to access the properties which is defined in the application.properties file
+-> @Value ("${custom.value}")
+-> private String customVal
+
+9 . Explain @RestController annotation in Spring Boot ?
+
+@RestController is a convenience annotation for create Restful controllers. It is a specialized of @Component and is autodected through classpath
+scanning . It adds the @Controller and @ResponseBody annotations. IT converts the response to Json or XML
+
+which eliminates the need to annotate every request handling method of the controller class with annotated handler 
+
+indicates that the data returned by each method will be written straight into the response body instead of rendering a template.
+
+10 . Difference between @RestController and @controller in the spring boot ?
+
+-> TO answer this we first understand the difference between a web application and a REST APi
+
+Its that the response from a web application is generally view (HTML + CSS + JAVASCRIPT)
+beacuse they are intended for human viewers while Rest Api just return data in form of JSON
+or XML because most of the REST clients are programs
+
+same goes with @Restcontroller and @controller annotations
+
+@controller map of the model object to view or template and makes it human readable
+but @RestController simply returns the object and object data is directly written into
+HTTP rsponse as JSON or XML
+
+11 . What are the major difference between RequestMapping and GetMapping?
+
+-> RequestMapping can be used with GET,POST,PUT and many other request methods using the method attributes on the
+annotation . whereas GetMSpping is only an extension of RequestMapping, which helps you to implove clarity on requests
+
+12 . What is the use of profiles in Spring Boot ?
+
+-> When developings for the enterprise, we typically deal with environments such as Dev,QA and Prod . The configuration
+properties for these environment are different.
+
+For example, we might be using an embeded H2 databse for Dev but prod could have the proprietary Oracle or DB2. Even if the DBMS
+is the same across environments, the URLs would definitely be different.
+
+To make this easy and clean, spring has the provision of profiles, to help separate the configuration for each environment. So 
+that instead of maintaining this programmatically , the properties can be kept in separate files such as application-dev.properties
+and application-prod.properties . The default application.properties points to the currently active profile using spring.profile.active
+so that the correct configuration s picked up
+
+13 .  what is the difference between an embedded container and a WAR?
+
+-> the main difference between an embedded container and a WAR file is that you can Spring booot application as a JAR from the command
+prompt without setting up a web server
+
+But to run a WAR file, you need to first set up a web server like Tomcat which has Servlet container and then you need to deploy WAR there.
+
+14 . What is spring Actuator ? what are its advantages ?
+
+-> Provides special feature to monitor and manage your application when you push it to production  
+
+15 . How to get the list of all the beans in your spring boot application ?
+
+-> Spring boot actuator "/Beans " is used to get the list of all the spring beans in your application
+
+"/env" returns the list of all the environment properties of running the spring boot application.\
+
+16 . Mention some advantages of Spring Boot
+Here are some major advantages of using spring-boot:
+
+Helps you to create a stand-alone application, which can be started using java.jar.
+It offers pinpointed‘started’ POMs to Maven configuration.
+Allows you to Embed Undertow, Tomcat, or Jetty directly.
+Helps you to configure spring whenever possible automatically.
+
+17 . Name the features of using Spring Boot
+Features of using Spring Boot are:
+
+Starter dependency
+Auto-configuration
+Spring initializer
+
+18 . List out some of the Spring Boot Starters.
+Different Spring Boot Starters are as follows:
+
+Security
+Parent
+web
+Thymeleaf
+Freemarker
+
+19 . Explain steps to deploy an application on virtual machine.
+Below are the steps to deploy application on virtual machine.
+
+Install Java.
+Install the Application Server.
+Deploy the application war file.
+
+20 . List out benefits of using the JavaConfig method.
+Following are the benefits of JavaConfig method.
+
+User can take benefit of object-oriented configuration.
+Spring Boot configuration improves the efficiency of web-based
+ application by eliminating complex XML configuration
+
+21 . Is excluding package without using the basePackages filter is possible? How?
+Yes. It is possible to exclude package without using the basePackages filter by simply using 
+the exclude attribute while using the @SpringBootApplication annotation.
+
+22 . How can you set active profile in Spring Boot?
+Follow the following methods to set an active profile in Spring Boot.
+
+Pass this profile as an argument when you launch the Spring Boot application.
+Set active the active profile in application.properties file. 
+
+23 . What is Spring Boot starter? How is it useful?
+Spring Boot has many starters. They are a set of convenient dependency descriptors.
+Starter allows you to include these descriptors in your pom.xml.
+For example, If you want to work with Spring MVC, you can include
+ “spring–boot–starter–web” as a dependency in pom.xml.
+
+24 . How can you connect Spring Boot to the database using JPA?
+Spring Boot supports spring-boot-data-JPA start, which helps you 
+to connect spring application with a relational database.
+
+25 .  Explain thymeleaf in Spring Boot
+Thymelaf is a server-side Java template engine for a web application. 
+It helps you to bring elegant natural templates to your web application.
+
+26 . How can you connect Spring Boot to the database using JPA?
+Spring Boot supports spring-boot-data-JPA start, which helps you to 
+connect spring application with a relational database.
+
+27 .  Define the term Spring Initializer
+Spring initializer is a web application which can create an initial project structure for you.
+
+28 . Where can you define properties in Spring Boot application?
+You can define properties of Spring Boot into a file called application.properties. It helps you to 
+create this file manually, or you can use Spring Initializer to create this file.
+
+29 . What are embedded containers support by Spring
+Spring Boot support the main three embedded containers:
+
+1) Tomcat
+
+2) Jetty
+
+3) Undertow.
+
+By default, it uses Tomcat as an embedded container.
+
+30. Explain thymeleaf in Spring Boot
+Thymelaf is a server-side Java template engine for a web application. 
+It helps you to bring elegant natural templates to your web application.
+
+31 .  What is the main difference between JPA and Hibernate?
+The main difference between both of them is that JPA is a specification/Interface,
+whereas Hibernate is only JPA implementations.
+
+

@@ -1,0 +1,926 @@
+Spring boot annotaions
+======================
+1 : @Component Annotation
+=========================
+--> The @Component annotaion indicates that an annotated class is a " spring bean / component".
+--> The @Component annotaion tell spring IOC container to automatically create spring bean.
+
+2 : @Autowired Annotation
+=========================
+--> The @Autowired annotaion is used " to inject the the bean automatically".
+--> The @Autowired annotaion is used in
+	1 : construction injection
+	2 : setter injection
+	3 : field injection
+	
+Example
+1 :  construction injection
+-----------------------------
+    private VegPizza vegPizza;
+
+    @Autowired
+    public PizzaController(VegPizza vegPizza) {
+        this.vegPizza = vegPizza;
+    }
+
+2 : setter injection
+--------------------
+	private VegPizza vegPizza;
+	 
+    public void setVegPizza(VegPizza vegPizza){
+        this.vegPizza = vegPizza;
+    }
+	
+3 : field injection
+-------------------
+
+    @Autowired
+    private VegPizza vegPizza;
+	
+	
+3 : @Qualifier Annotation
+=========================
+--> @Qualifier annotaion is used in conjunction with Autowired to avoid confusion when we have two or more beans configiured for same type.
+
+exmaple :
+
+// note : by using the "Interface instead of class " we can achived a loose coupling
+//    here Pizza is an Interface
+//vegPizza is class name : bean name same as class name start with small later
+
+    private final Pizza pizza;
+
+    @Autowired
+    public PizzaController(@Qualifier("vegPizza") Pizza pizza) {
+        this.pizza = pizza;
+    }
+	
+4 : @Primary Annotation
+=======================
+--> we use @primary annotaion to give "higher preference to bean when there are mmultiple beans of the same type.
+--> @Primary annotaion is alternate of @Qualifier annotaion	
+--> @Primary annotaion used on class level
+
+@Component
+@Primary
+public class VegPizza implements Pizza {
+    @Override
+    public String getPizza() {
+        return "veg Pizza";
+    }
+
+}
+
+5 : @Bean annotaion
+===================
+--> @Bean annotaion indicates that a method produces to be managed by the spring container.
+--> The @Bean annotaion is usually declared in configuration class to create spring Bean definitions.
+--> we can define spring bean the configuration class @Configuration
+
+--> by default the bean name is same as method name
+--> we can specify bean name using @Bean(name="BeanName").
+
+--> @Bean annotaion provides "initMethod and destroyMethod attribute" to perform certain actions after bean initilization or before bean destruction by a container.
+ 
+ @Bean(initMethod = "init" , destroyMethod = "destroy")
+ 
+ 
+6 : Stereotype annotaion
+========================
+--> spring provides three types of Stereotype annotaion
+1 : @Service
+2 : @Repository
+3 : @Controller
+
+--> These annotaion are used to create spring bean automatically in the application context(Spring IOC container).
+--> The main stereotype annotaion is " @Component ".
+--> By using this annotaion , spring provides more stereotype meta annotaion susch as @Service , @Repository , @Controller
+
+--> @Service annotaion is used to create spring bean at the Service layer
+--> @Repository annotaion is used to create spring bean for the repositories at the DAO layer.
+--> @Controller annotaion is used to create spring bean at the Controller layer
+ 
+controller : in the controller class we write a logic to handle the "Http Request".
+service : in the service class we write the all " Business logic".
+repository : in the repository class we we
+
+ 
+7: @Lazy annotaion : load the class on-demand
+==================
+--> by Default spring creates " all singleton bean eagerly " at the startup / bootstrapping ofthe application context.
+--> you can load the spring bean lazily ( on-demand) using @Lazy annotaion.
+--> @Lazy annotaion can be used with @Configuration , @Component , @Bean annotaion
+
+Q : which initialiion is recommanded Eager or Lazy?
+--> eagerly initilization is recommanded : to avoid and detect all possible error immediately rather than at runtime.
+
+8 : @Scope annotaion
+====================
+--> The latest version of the spring framework defines 6 types of scopes:
+1 : singleton
+2 : prototype
+3 : request
+4 : session
+5 : application
+6 : websocket
+
+--> the request, session, application, websocket are only available in a web-aware application.
+
+@Scope:
+======
+1: @Scope annotaion is used to define a scope of the bean.
+2: we use @Scope to define the scope of a @Component class or a @Bean definition.
+
+1 : singleton
+-------------
+--> singleton scope is only one instance of the bean is created and shared across the entire application.
+--> singleton scope is the Default scope.
+--> it is return the same bean u can request mutiple time also.
+
+exmaple :
+
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class SingletoneBean {
+    public SingletoneBean()
+    {
+        System.out.println("SingletoneBean .... ");
+    }
+}
+
+note : if u not annotated as class As @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+it is also provide same result 
+
+2 : prototype
+-------------
+--> a new instance of the bean is created every time it is request.
+
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class PrototypeBean {
+    public PrototypeBean(){
+        System.out.println("PrototypeBean ....");
+    }
+}
+
+result :
+========
+
+@SpringBootApplication
+public class RedisApplication {
+
+	public static void main(String[] args) {
+		 ConfigurableApplicationContext context = SpringApplication.run(RedisApplication.class, args);
+
+		SingletoneBean singletoneBean = context.getBean(SingletoneBean.class);
+		System.out.println(singletoneBean.hashCode());
+		
+		SingletoneBean singletoneBean1 = context.getBean(SingletoneBean.class);
+		System.out.println(singletoneBean1.hashCode());
+		
+		SingletoneBean singletoneBean2 = context.getBean(SingletoneBean.class);
+		System.out.println(singletoneBean2.hashCode());
+
+		PrototypeBean prototypeBean = context.getBean(PrototypeBean.class);
+		System.out.println(prototypeBean.hashCode());
+		
+		PrototypeBean prototypeBean1 = context.getBean(PrototypeBean.class);
+		System.out.println(prototypeBean1.hashCode());
+		
+		PrototypeBean prototypeBean2 = context.getBean(PrototypeBean.class);
+		System.out.println(prototypeBean2.hashCode());
+
+	}
+
+9 : @Value Annotation
+=====================
+--> @Value annotaion is used to assign a default values to variables and method arguments.
+--> @Value annotaion is mostly used to get value for specific property key from properties file.
+--> we can read spring environment variables as well as system variables using @Value annotaion.
+
+1 : assign default value to a variables using @Value annotaion
+
+@Component
+@Getter
+public class ValueAnnotationDemo {
+
+    @Value("Tanveer")
+    private String defaultName;
+
+}
+
+2 : get the value from application.properties using @Value("${key}")
+# key = value
+mail.host = gmail.com
+mail.email = tas@gmail.com
+mail.password= 1999
+
+@Component
+@Getter
+public class ValueAnnotationDemo {
+
+    @Value("${mail.host}")
+    private String host;
+	
+    @Value("${mail.email}")
+    private String email;
+	
+    @Value("${mail.password}")
+    private Integer password;
+
+}
+
+3: get the value from environment variable and system variable using @Value annotaion
+
+@Component
+@Getter
+public class ValueAnnotationDemo {
+
+    @Value("${java.home}")
+    private String javaHome;
+
+    @Value("${HOME}")
+    private String homeDir;
+ }
+ 
+ 
+10 : @PropertySource Annotation
+===============================
+--> @PropertySource annotaion is used to provide properties file to Spring Environment.
+--> this annotaion is used with @Configuration class
+--> @PropertySource annotaion is repeatable , means you can have mutiple PropertySource on a Configuration class
+--> we can used @Value annotaion and Environment class to read the property file.
+
+*************** 
+using  @PropertySource("classpath:<properties_filr_name>")
+
+*******************************
+
+Q : how to read custom properties file
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySource("classpath:mail.properties")
+@PropertySource("classpath:message.properties")
+public class SpringConfig {
+}
+
+3 : create class that contain all the key present in the custom properties files
+
+@Component
+@Getter
+public class PropertySourceDemo {
+
+    @Value("${gmail.host}")
+    private String host;
+	
+    @Value("${gmail.email}")
+    private String email;
+	
+    @Value("${gmail.password}")
+    private String password;
+
+    @Value("${app.name}")
+    private String appName;
+
+    @Value("${app.description}")
+    private String appDescription;
+
+}
+
+
+Q : how to read the cutom properties file using a Environment Object?
+
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySource("classpath:mail.properties")
+@PropertySource("classpath:message.properties")
+public class SpringConfig {
+}
+
+3 : create class that contain all the key present in the custom properties files
+--> create a instance of Environment class 
+--> used the getter for all the feild
+
+@Component
+public class EnvironmentPojoToRead {
+    @Autowired
+    private Environment environment;
+	
+    private String host;
+    private String email;
+    private String password;
+    private String appName;
+    private String appDescription;
+
+    public String getHost() {
+        return environment.getProperty("gmail.host");
+    }
+
+    public String getEmail() {
+        return environment.getProperty("gmail.email");
+    }
+
+    public String getPassword() {
+        return environment.getProperty("gmail.password");
+    }
+
+    public String getAppName() {
+        return environment.getProperty("app.name");
+    }
+
+    public String getAppDescription() {
+        return environment.getProperty("app.description");
+    }
+}
+
+11 : @PropertySources Annotation
+================================
+--> @PropertySources annotaion is used to provide mutiple properties file to Spring Environment.
+--> this annotaion is used with @Configuration class
+
+*************** 
+using @PropertySources({
+		@PropertySource("classpath:mail.properties"),
+        @PropertySource("classpath:message.properties")
+		})
+*******************************
+
+Q : how to read custom properties file
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySources({
+        @PropertySource("classpath:mail.properties"),
+        @PropertySource("classpath:message.properties")
+})
+public class SpringConfig {
+}
+
+3 : create class that contain all the key present in the custom properties files
+
+@Component
+@Getter
+public class PropertySourceDemo {
+
+    @Value("${gmail.host}")
+    private String host;
+	
+    @Value("${gmail.email}")
+    private String email;
+	
+    @Value("${gmail.password}")
+    private String password;
+
+    @Value("${app.name}")
+    private String appName;
+
+    @Value("${app.description}")
+    private String appDescription;
+
+}
+
+
+Q : how to read the cutom properties file using a Environment class or Environment Object?
+
+1 : first create custom properties file in the resource folder [ gmail.properties]
+
+#custome properties file
+
+gmail.host = gmail.com
+gmail.email = Tanveer@1234gmail.com
+gmail.password= secret
+
+2 : create a ConfigClass and annotated a class with @PropertySource("classpath :<name_properties_file>")
+
+@Configuration
+@PropertySources({
+        @PropertySource("classpath:mail.properties"),
+        @PropertySource("classpath:message.properties")
+})
+public class SpringConfig {
+}
+ 
+3 : create class that contain all the key present in the custom properties files
+--> create a instance of Environment class 
+--> used the getter for all the feild
+
+@Component
+public class EnvironmentPojoToRead {
+    @Autowired
+    private Environment environment;
+	
+    private String host;
+    private String email;
+    private String password;
+    private String appName;
+    private String appDescription;
+
+    public String getHost() {
+        return environment.getProperty("gmail.host");
+    }
+
+    public String getEmail() {
+        return environment.getProperty("gmail.email");
+    }
+
+    public String getPassword() {
+        return environment.getProperty("gmail.password");
+    }
+
+    public String getAppName() {
+        return environment.getProperty("app.name");
+    }
+
+    public String getAppDescription() {
+        return environment.getProperty("app.description");
+    }
+}
+
+12: @Controller Annotation
+==========================
+--> Spring provides @Controller annotaion to make a java class as a spring MVC controller.
+--> The @Controller annotaion indicates that a particular class serves the role of a controller.
+--> @Controller class in spring that handles incoming Http request
+
+
+@Controller
+public class BookController {
+
+/*    
+us must required three annotations
+1 : @Controller : the class become a spring mvn controller class and handle the HTTP request
+2 : @RequestMapping : it is used to map the incoming HTTp request
+3 : @ResponseBody : it is used to convert the java object into JSON format and return the JSON object back to client .
+ */
+ 
+    @RequestMapping("/hello")
+    @ResponseBody
+    public String helloWorld(){
+        return "hello from bookController....";
+    }
+
+    @RequestMapping("/book")
+    @ResponseBody
+    public Book getBook(){
+        Book book = new Book(1L, "java","core java");
+        return book;
+    }
+}
+
+
+13 : @RestController
+====================
+--> In order to develop RestFull web services using spring MVC, we need to use @Controller and @ResponseBody annotaion.
+--> Spring 4.0 introduced  @RestController annotaion , a specialized version of the @Controller.
+--> using @RestController annotaion we does not need  to adding a @Controller and @ResponseBody annotaion.
+
+--> @RestController is a combination of @Controller and @ResponseBody
+@RestController = @Controller + @ResponseBody
+
+note : --> remember
+
+--> if you want to develop RestFull web services using sprinng MVC then the class is annotated with @RestController.
+--> if you want to develop spring MVC application then u can annotated class with @Controller.
+ 
+14 : @RequestMapping Annotation : 
+===============================
+--> @RequestMapping annotaion is used to map web request to spring controller method.
+--> @RequestMapping can be applied to the controller class as well as handler methods.
+--> best used of @RequestMapping is to define " base uri " : @RequestMapping("/api")  
+
+@RequestMapping Annotation Example:-
+-----------------------------------
+1 : @RequestMapping with Class :->
+exmaple :
+
+@RestController
+@RequestMapping("/api")
+public class PersonController {
+
+    @RequestMapping("/person")
+    public Person getPerson(){
+        Person person = new Person(1L,"Tanveer",23);
+        return person;
+    }
+}
+
+2 : @RequestMapping with Method :->
+exmaple :
+
+@RestController
+public class PersonController {
+    
+    @RequestMapping("/person")
+    public Person getPerson(){
+        Person person = new Person(1L,"Tanveer",23);
+        return person;
+    }
+}
+
+3 : @RequestMapping with Multiple URI:-> @RequestMapping(value = {"/person", "/getPerson", "/data"})
+exmaple:
+
+@RestController
+@RequestMapping("/api")
+public class PersonController {
+
+    @RequestMapping(value = {"/person", "/getPerson", "/data"})
+    public Person getPerson(){
+        Person person = new Person(1L,"Tanveer",23);
+        return person;
+    }
+}
+
+
+4 : @RequestMapping with HTTP Method :[ GET, POST, PUT, DELETE]
+exmaple :
+
+@RestController
+@RequestMapping("/api")
+public class PersonController {
+
+    @RequestMapping(value = {"/person", "/getPerson", "/data"}, method = RequestMethod.GET)
+    public Person getPerson(){
+        Person person = new Person(1L,"Tanveer",23);
+        return person;
+    }
+}
+
+5 : @RequestMapping with Produces and Consumes:-->
+produces : The produces attribute is produces a result in json format.
+            produces = MediaType.APPLICATION_JSON_VALUE
+
+consumes : The consumes attribute consumes the json that send by client
+            consumes = MediaType.APPLICATION_JSON_VALUE
+
+
+@RestController
+@RequestMapping("/api")
+public class PersonController {
+
+    @RequestMapping(value = {"/person", "/getPerson", "/data"},
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Person getPerson(){
+        Person person = new Person(1L,"Tanveer",23);
+        return person;
+    }
+}
+
+
+15 : @GetMapping Annotation
+============================
+--> The GET HTTP request is used to get a single or mutiple resource.
+--> @GetMapping annotaion for mapping Http GET request onto specific handler method.
+--> @GetMapping annotaion is a shortcut for @RequestMapping(method = RequestMethod.GET).
+
+note : do not used consumes attribute with @GetMapping
+
+@GetMapping(value = "/allPerson",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Person> getAll(){
+        return Arrays.asList(
+                new Person(1L,"Tanveer",23),
+                new Person(2L,"Tanveer",23),
+                new Person(3L,"Tanveer",23)
+        );
+    }
+	
+16 : @PostMapping Annotation
+============================
+--> The POST HTTP method is used to create a resource.
+--> @PostMapping annotaion for mapping HTTP POST request onto specific handler method.
+--> @PostMapping annotaion is a shortcut for @RequestMapping(method = RequestMethod.POST).
+--> The @RequestBody annotaion is responsible for retrueving the HTTP request body and automatically converting it to the Java object.
+
+
+17 : @RequestBody : 
+===================
+--> convert the json into java object.
+
+18 : @ResponseBody : 
+====================
+--> convert java object into json.
+--> it is used " http message converter " to convert json to object or object to json
+
+Q : how to add response status code to the rest api?
+--> we can used two way
+
+1 :  19 : using @ResponseStatus()
+-->  @ResponseStatus(value = HttpStatus.CREATED)
+
+exmaple:
+
+    @PostMapping(value = "/create",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public Person createPerson(@RequestBody Person person){
+        Person person1 = new Person();
+        person1.setId(person.getId());
+        person1.setAge(person.getAge());
+        person1.setName(person.getName());
+        return person1;
+
+    }
+
+2 : using ResposeEntity<> class 
+
+exmaple:
+
+    @PostMapping(value = "/create",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Person> createPerson(@RequestBody Person person){
+        Person person1 = new Person();
+        person1.setId(person.getId());
+        person1.setAge(person.getAge());
+        person1.setName(person.getName());
+        return new ResponseEntity<>(person1,HttpStatus.CREATED);
+
+    }
+	
+Q : 200 status code
+===================
+1 : 200 : OK
+2 : 201 : CREATED
+3 : 202 : ACCEPTED
+4 : 204 : NO CONTENT
+5 : 206 : PARTIAL CONTENT
+
+Q : 400 status code
+===================
+1 : 400 : Bad Request
+2 : 401 : Unauthorized
+3 : 403 : Forbidden
+4 : 404 : Not Found
+5 : 405 : Method Not Allowed:
+6 : 415 : Unsupported Media Type
+
+Q : 500 status code
+====================
+1 : 500 : Internal Server Error
+2 : 501 : Not Implemented
+3 : 502 : Bad Gateway
+4 : 503 : Service Unavailable
+5 : 505 : HTTP Version Not Supported:
+
+20 : @PutMapping Annotation
+===========================
+--> The PUT HTTP method is used to update a resource.
+--> @PutMapping annotaion for mapping HTTP PUT request onto specific handler method.
+--> @PutMapping annotaion is a shortcut for @RequestMapping(method = RequestMethod.PUT).
+
+
+@PutMapping("/update/{id}")
+    public ResponseEntity<Person> updatePerson(@RequestBody Person person,@PathVariable Long id){
+        person.setId(id);
+        return ResponseEntity.ok(person);
+    }
+	
+21 : @PathVariable annotaion :
+==============================
+http:localhost:8080/api/person/update/1 :-->  1 is the uri template variable
+
+1 : @PathVariable annotaion used on a method argument .
+2 : @PathVariable annotaion used to bind the value of URI template variable to the method argument.
+
+@PutMapping("/update/{id}")
+    public ResponseEntity<Person> updatePerson(@RequestBody Person person,@PathVariable Long id){
+        person.setId(id);
+        return ResponseEntity.ok(person);
+    }
+
+note : if the uri template name and method argument name is different  ; id == person_id
+then we need to pass the uri template variable name to a @PathVariable("uri_var_name) : @PathVariable("id") Long person_id
+ 
+@GetMapping("/person/{id}/{name}/{age}")
+    public ResponseEntity<Person> pathVariableDemo(@PathVariable("id") Long person_id, @PathVariable String name, @PathVariable Integer age){
+        Person person = new Person();
+        person.setId(person_id);
+        person.setName(name);
+        person.setAge(age);
+        return ResponseEntity.ok(person);
+
+    }
+22 : @DeleteMapping Annotation
+===========================
+--> The DELETE HTTP method is used to delete a resource.
+--> @DeleteMapping annotaion for mapping HTTP DELETE request onto specific handler method.
+--> @DeleteMapping annotaion is a shortcut for @RequestMapping(method = RequestMethod.DELETE).
+
+ @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<String> deletePerson(@PathVariable Long id){
+        return ResponseEntity.ok("Book deleted successfully...");
+    }
+
+23 : @RequestParam Annotation
+=============================
+--> we can use @RequestParam to extract "query parameter" from thr request
+--> http://localhost:8080/api/person/query?firstName=Tanveer&lastName=Patel	
+--> firstName and lastName is the " query parameter".
+
+//http://localhost:808/api/person/query?id=1&name=Tanveer&age=24
+    @GetMapping("/person/query")
+    public ResponseEntity<Person> requestParamDemo(@RequestParam(name = "id") Long id,
+                                                   @RequestParam(name = "name") String name,
+                                                   @RequestParam(name = "age") Integer p_age){
+
+        Person person = new Person();
+        person.setId(id);
+        person.setName(name);
+        person.setAge(p_age);
+        return ResponseEntity.ok(person);
+
+    }
+	
+note : 
+1 : name of method argument and query parameter name should be different or same its our wish.
+2 : we can pass the in the url query parameter name should be same as we can pass the name inside the @RequestParam.
+
+
+24 : @SpringBootApplication Annotation
+======================================
+--> @SpringBootApplication annotaion is the combination of three annotaion
+	1 : @SpringBootConfiguration --> it is internally used @Configuration annotaion
+	2 : @EnableAutoConfiguration
+	3 : @ComponentScan
+--> It is the entry point of the spring boot application.
+	
+25:  @SpringBootConfiguration 
+==============================
+--> it is internally used @Configuration annotaion
+--> It is work as @Configuration annotaion
+--> we can used @Configuration annotaion for "JAVA based configuration".
+
+Q : how many types of configuration in the spring boot?
+--> they are three types of configuration in the spring boot
+1 : XML based configuration
+2 : JAVA based configuration
+3 : Annotation based configuration
+
+26 : @EnableAutoConfiguration annotaion
+=======================================
+--> this annotaion is responsible for enbale the autoConfiguration class whene were our springBootApplication find the dependency on class path.
+
+27 : @ComponentScan annotaion
+=============================
+--> using this annotaion we can scan all the spring component present in the base package and its subPackage.
+
+28 : @Service Annotation
+========================
+--> @Service annotaion is used to create spring bean at the Service layer
+--> service : in the service class we write the all " Business logic".
+
+
+29 : @Repository Annotation
+===========================
+--> @Repository annotaion is used to create spring bean for the repositories at the DAO layer.
+--> repository : in the repository class we write all the DB related stuff.
+
+
+30 : @Controller
+================
+--> @Controller annotaion is used to create spring bean at the Controller layer
+--> controller : in the controller class we write a logic to handle the "Http Request".
+
+	
+Q : Can we disable the default web server in the Spring boot application? 
+--> Yes, we can use application.properties to configure the web application type i.e 
+  spring.main.web-application-type=none.
+  
+  
+JPA Annotation
+==============
+
+Entity Annotations:-->
+
+1 : @Entity: 
+============
+--> Marks a class as an entity, representing a table in the database.
+
+2 : @Table:
+===========
+--> Specifies the table name for an entity.
+
+3 : @Column: 
+============
+--> Maps a field to a column in the table.
+
+4 : @Id:
+========
+--> Marks a field as the primary key of the entity.
+
+5 : @GeneratedValue:
+====================
+--> Specifies the generation strategy for a primary key value.
+
+6 : @Transient: 
+===============
+--> Marks a field as not persistent, i.e., not stored in the database.
+
+Relationship Annotations:-->
+
+1 : @OneToOne:
+==========
+--> Defines a one-to-one relationship between two entities.
+
+2 : @OneToMany:
+==============
+--> Defines a one-to-many relationship between two entities.
+
+3 : @ManyToOne:
+===============
+--> Defines a many-to-one relationship between two entities.
+
+4 : @ManyToMany: 
+================
+--> Defines a many-to-many relationship between two entities.
+
+5 : @JoinColumn: 
+================
+--> Specifies the join column for a relationship.
+
+6 : @JoinTable:
+=============== 
+--> Specifies the join table for a many-to-many relationship.
+
+Validation Annotations:-->
+
+1 : @NotNull: 
+=============
+--> Validates that a field is not null.
+
+2 : @Size:
+==========
+--> Validates the size of a string, collection, or array.
+
+3 : @Min: 
+=========
+--> Validates that a numeric field is greater than or equal to the specified minimum value.
+
+4 : @Max:
+========
+--> Validates that a numeric field is less than or equal to the specified maximum value.
+
+5 : @Email:
+==========
+--> Validates that a field is a well-formed email address.
+
+6 : @Pattern: 
+=============
+--> Validates that a field matches the specified regular expression.
+
+
+Q : What are embedded containers support by Spring.
+Spring Boot support the main three embedded containers:
+
+1) Tomcat
+2) Jetty
+3) Undertow.
+
+By default, it uses Tomcat as an embedded container.
+
+Q : How can you connect Spring Boot to the database using JPA?
+Spring Boot supports spring-boot-data-JPA start, which helps you to 
+connect spring application with a relational database.
+
+Q : Difference between @RestController and @controller in the spring boot ?
+-> TO answer this we first understand the difference between a web application and a REST APi
+
+Its that the response from a web application is generally view (HTML + CSS + JAVASCRIPT)
+beacuse they are intended for human viewers while Rest Api just return data in form of JSON
+or XML because most of the REST clients are programs
+
+same goes with @Restcontroller and @controller annotations
+
+--> @controller map of the model object to view or template and makes it human readable.
+--> @RestController simply returns the object and object data is directly written into
+HTTP rsponse as JSON or XML.
+
+Q :How to use a property defined in application.properties file into your java class ?
+-> Use the @Value annotation to access the properties which is defined in the application.properties file
+-> @Value ("${custom.value}")
+-> private String customVal
