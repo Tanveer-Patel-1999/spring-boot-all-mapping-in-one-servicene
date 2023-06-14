@@ -1,0 +1,177 @@
+Spring boot interview questions
+================================
+
+1 : what is Sprig?
+--> spring is a Framework which is used to making a light-weight , lossley coupled enterprise application in java.
+--> It provides predines API for 
+	1: Database Operations : CURD Operations
+	2: Restfull web services : Integrating one serivces to another services
+	3: micro services and security
+	
+2 : what are the features of spring Framework?
+--> Spring provides features are
+1 : Predeined template : JDBC Template , hibernate Template
+2 : Loose coupling  : it is achive using layers mechanisum : serivces layer, presentation layer , dB layer
+3 : light weight
+4 : Easy to test
+5 : powerfull Abstraction
+6 : fast developement (RAD : rapid application developement)
+
+3 : what is dependency injection?
+--> dependency injection is a mechanisum to inject a object to a dependebt class.
+
+4 : what are the types of Dependency injection?
+--> they are 5 types of dependency injection.
+1 : constructor injection
+2 : setter injection
+3 : Field injection : @Autowired
+4 : Circular injection : A is dependent of B object and B is dependent on A object.
+5 : Lookup method injection
+
+5 : what is IOC in spring?
+--> The full form of IOC is Inversion of Control
+--> IOC conatiner is responsible for creating and destroying an object.
+
+6 : what is spring Configuration file?
+--> It is XML file which contains the information of classes and how these are linked each other.
+--> It is called as " XML configuration file"
+--> sample code like
+	<bean id = "obj1" class="com.app.EmployeeService">
+		<property name="empType">
+			<value>export</value>
+		</property>
+	</bean>
+	
+	--> bean tag		: indicated object
+	--> property tag 	: indicated setter method()
+	
+7 : what is spring bean?
+--> spring bean is also called as object.
+--> the spring bean is completely created and destroy by IOC container.
+ 
+8 : difference between Construction and setter injection?
+--> if a class have 4 variables and the constructor for those variables at the time of creating an object then u have to pass all 4 variables.
+
+--> for that constructor injection " partial injection " is not possible.
+--> but we can achieve " partial injection " by using setter injection.
+
+--> constructor injection allways create new objection if any modification do.
+--> setter injection if will not create new instaance if any modification is do.
+
+--> if u have to pass all property in the order then you go for constructor injection.
+--> if u have to pass some few property then go for setter injection.
+
+9: what are the Bean Scope spring provided?
+--> spring provided five types of scope 
+
+--> Singleton and Prototype work for any type of application.
+1 : Singleton : IOC conatiner will create only one object
+2 : Prototype : IOC container will create new objecct every time
+
+--> request and session relataed to " web application only"
+3 : Request	  : the request is came from " browser " or client application and object is create in IOC container and  onces response is committed then object is actually destroy in the IOC container.
+4 : Session	  : Session is nothing but Http session [ login or logout ] login session is created in IOC container and logout session is destroy in IOC container. 
+5 : Global-session (not exist in new version of spring)
+
+10 : what is Bean Wiring?
+--> linking two object is called as "Wiring".
+--> when the beans are Combined together inside the IOC conatiner that is called "Wired" or "Bean wiring".
+
+exam : craete an object of EmployeeRepository and inject in the EmployeeService.
+
+11 : what is Autowiring in Spring and what are the different modes it have?
+--> setter injection
+--> feild injcetion
+--> constructor injcetion
+
+12 : what is difference between @Autowired and @Inject?
+--> @Autowired and @Inject are used for same purpose 
+--> both are used for dependency injcetion purpose.
+--> @Autowired is actually provided by spring framework.
+--> @Inject is actually provided by java doubly framework.
+--> spring support both @Autowired and @inject.
+
+13 : what is the differnce between @Component and @Bean?
+--> both @Component and @Bean are used to created an object.
+--> @Component create object inside IOC conatiner.
+--> @Component can be used if we have " source code " of a class .[ programmer- define class] at the top of the class we annotated @Component.
+--> If class is " pre defined " and want to create objecct inside IOC container then we need to used @Bean (java based configuration) along with @Configuration (java based configuration).
+
+14 : how many types of IOC container are there in Spring?
+--> they are two types of container
+	1 : BeanFactory : 
+		--> BeanFactory is an Interface
+		--> BeanFactory is responsible for creating a bean and destroy the bean.
+		--> BeanFactory is take "XML" input.[xml configuration]
+	
+	2 : ApplicationContext :
+		--> ApplicationContext is an Interface.
+		--> ApplicationContext is internally extends BeanFactory Interface.
+		--> It provides some extra functionality on top of BeanFactory.
+		--> ApplicationContext is responsible for creating a bean and destroy the bean.		
+		1 : Annoation Support
+		2 : Reactive Programming etc.
+		
+15 : what is used of @Required Annoation in Sprig Framework?
+--> @Required annotation genrally return on the top of the set() method.
+--> the value of the feild must be required it not accept null value.
+
+16 : what is the use of @Autowired annotation in spring?
+--> it is used to link (Inject) two beans inside IOC container.
+--> @Autowired is most commenly used injection [ link one layer : presentation layer to another layer : serivce layer ]
+
+17 : what is the use of @Qualifier annotation in spring Framework?
+--> when we create more than one bean of the same type and want to wire only one of them then we go for @Qualifier annotation.
+--> to avoid the embuguity mechanisum of bean with same type then go for the @Qualifier.
+--> It is used at the time of Autowired.
+
+18 : what is @Primary Annoation in spring?
+--> It is same as @Qualifier 
+--> when we create more than one bean of the same type and want to wire only one of them then we go for @Primary annotation.
+--> It is used at the time of bean creation.
+--> @Primary is used to give highest priority.
+
+19 : what are lifecycle method in spring?
+--> they are two lifecycle method in the spring.
+	1 : init() metho :
+	2 : destroy() method :
+--> these method are executed by default by Spring IOC container while creating Object.
+--> order of executing
+	1 : Creating an Object.
+	2 : providing a data using setter injection
+	3 : calling init() method.
+	4 : destroy() method is called finally object will be destroy.
+	
+note : destroy() method is something do some task before destroying a object.
+--> destroy() : means clean up process.
+--> destroy() method not destroy an object.
+
+20 : what are different ways of writing lifecycle method in spring?
+--> they are three types :
+	--> 1 : Declarative Approach  : using XML
+	--> 2 : programmatic Approach : using Spring Integrating.
+		implement interface : InitializingBean , DisPosableBean
+	-->	3 : Annoation Approach : @PostConstruct and @PreDestroy.
+	
+21 : what are the common implementions of the ApplicationContext?
+---> ApplicationContext is a Spring container.
+	1 : FileSystemXmlApplicationContext conatiner class : present the XML file any where inside our project or from your System.
+	2 : ClassPathXmlApplictionContext container class :  present the XML file  inside your project in src : resources
+	3 : WebXmlApplictionContext container class : it is used when we used web based application.
+	
+22 : what are the Stereo type annotations?
+--> if you used Stereo type annotation top of the class IOC conatiner create an object for that class.
+--> they are % Stereo type annotation in Sprig framework
+	1 : @Component			: it is used to create an object
+	2 : @Controller			: it is used http based web based Application
+	3 : @RestController		: it is used to create restfull web services.
+	4 : @Service			: it is used to implement a business logic
+	5 : @Repository			: it is used to implement a database operation.
+
+23 : what are different module in spring?
+-->
+
+24 : what is profile in spring?
+--> 
+
+
