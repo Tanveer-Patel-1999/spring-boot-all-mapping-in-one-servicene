@@ -405,3 +405,250 @@ note :
 
 ############################## Sprig data Jpa ########################
 
+
+2 : what is Hibernate ?
+--> Hibernate is a java framework that simplified the development of java application to interact with the database.
+--> Hibernate is a " ORM tool ".
+--> Hibernate is an open source and lightweight.
+--> Hibernate is a "non-invasive" framework , means it does not forces the programmers to extend / implements any class or interfaces.[ loosely coupled ]
+--> It is invented by " Gavin king " in 2001.
+--> Any type of application can we build with hibernate framework.[desktop application , web application , spring application, enterprise application ]
+
+
+1 : what is ORM?
+--> ORM : Object relational mapping
+
+--> ORM is a technique used to creating a "bridge" between java application and relational database.
+--> ORM is mainly used for Database operations.
+--> Every operations should to be in Object formates( CURD ).
+--> we have two things
+	1 :  java application
+	2 :  database
+--> Objectc  : In java application we can store the data using " Object ".
+--> Relational : In java application we used the relational database.
+	A : relational database mean data can be stored in Table formates [ rows and columns ]
+--> Mapping : [maped class [object ] to table [Entity class] : we can used mapping the object feild to the table table feild .
+
+
+3 : Traditional way to save data using "JDBC".[ how JDBC work ]
+--> java application [object] : call JDBC API : JDBC API call JDBC drive : To store the data in RDMS .
+--> programmers write code manually to store object(data) to database using jdb.
+
+where Hibernate play its role
+----------------------------
+--> java application [object] : Hibernate framework : store data in database.
+--> nows its done automatically by hibernate.
+--> mapping your Object to the Table.
+
+4 : 
+
+note:
+--> earley we write a sql query with the help of jdbc using Hibernate we does not need to write a sql query hibernate is responsible to wtite a fired a sql query.
+--> hibernate create dao [ data access object] automatically.
+ 
+ 
+Hibernate annotation
+====================
+1 : @Entity : 					: The @Entity annotation is indicated the class is table in the Db. [@Entity is marking " any class " as a Entity or table is the database.
+2 : @Table(name = "table_name)  : It is used to give the name to the table
+3 : @Id 						: It is used to create a primary key in the table.[ @Id is marking " any columns " as a primarey key ]
+4 : @GeneratedValue 			: It is used to generate a value automatically.
+5 : @Columns					: It is used to give the cloumn name.
+6 : @Transient					: This tell hibernate not to save this feild.
+
+
+question for jpa
+================
+1 : what is ORM? 
+ 
+--> ORM : Object relational mapping
+--> ORM is a technique used to creating a "bridge" between java application and relational database.
+--> ORM is mainly used for Database operations.
+--> Every operations should to be in Object formates( CURD ).
+--> we have two things
+	1 :  java application
+	2 :  database
+--> Objectc  : In java application we can store the data using " Object ".
+--> Relational : In java application we used the relational database.
+	A : relational database mean data can be stored in Table formates [ rows and columns ]
+--> Mapping : [maped class [object ] to table [Entity class] : we can used mapping the object feild to the table table feild .
+
+2 : what is JPA?
+
+--> JPA stands for " java Persistence API".
+--> JPA is one of ORM specification.
+
+3 : Explain the Mapping Rule in JPA?
+
+--> we define Entity(POJO) class for one Table.
+--> we define one variable for one columns.
+
+4 : what is difference between JPA and Hibernate?
+--> 
+
+5 : what are some  advantages of JPA?
+--> database independent(Dialect) : we can used any types of data base [ orcale, mysql ]
+--> Easy to develop Database operations (CURD operations).
+--> JPQL / HQL support.
+
+6 : what is the Spring data OR spring Boot Data JPA repository?
+--> There are Three spring data / spring Boot Data JPA repository.
+	1 : CurdRepository
+	2 : PagingAndSortingRepository
+	3 : JpaRepository
+	
+--> there are interfaces
+
+7 : What is difference between PagingAndSortingRepository and JpaRepository?
+
+--> JpaRepository works only for relational database.
+--> like : MySql, Oracle, Postgress etc
+
+--> PagingAndSortingRepository and CurdRepository work on Both SQL and NoSql database.
+--> like : mongoDB
+
+8 : what are pre-define methods given by Repository interfaces?
+
+--> save() : insert or update
+--> delete()
+--> deleteById()
+--> findById()
+--> findAll()
+--> count()
+--> existById()
+
+9 : what is Entity class and Explain commonly used annotation for this?
+
+--> Entity class is also called as POJO clas.
+--> A class mapped with Database Table is called as Entity class.
+--> Entity class must be mapped with Database table using JPA annotation
+--> Like @Entity, @Table, @Id, @Column etc
+
+10 : what is the naming convention for finder methods in the spring data repository interface?
+
+--> syntax:
+	<ReturnType> findBy<VariableAndKeywords>(DataType params);
+--> exm:
+	List<User> findByLastName(String lastName);
+	
+11 : how can we create a custom repository in spring data Jpa?
+
+--> craete a repositoryInterface
+--> created repositoryInterface extends
+	1 : Repository
+	1 : CurdRepository
+	2 : PagingAndSortingRepository
+	3 : JpaRepository
+--> annotated that interface with @repository
+
+12 : what is PagingAndSortingRepository?
+
+--> we can used PagingAndSortingRepository for mainly 2 purpose
+	1 : we can used Sorting a data in ascending or descending order.
+	2 : we can used for pagination [ we want a data page by page] 
+--> PagingAndSortingRepository extend CurdRepository.
+
+13 : what is CurdRepository?
+
+-->
+
+14 : what is @Query used for?
+
+--> @Query annotation is used to write " custom query or user / programmer defined query.
+--> By using this query we can write JPQL / HQL query which written by the class and variable name rather than DB Table name and Columns name.
+
+15 : what type of Queries can be implemented using @Query annotation.
+--> By using @Query annotation we can write both select and non-select (update/delete) operations.
+--> By using @Query we can write both JPQL and native SQl query.
+--> But when we are using @Query with update or delete we should also specify @Modifying annotation.
+
+
+16 : Give me example of using @Query annotation with JPQL?
+
+--> Based on the Employee name fetch the data from the database
+example:
+	@Query("SELECT e FROM Employee e where e.name=?1")
+	List<Employee> getEmployeeBasedOnName(String name);
+	e   : alias
+	?1  : one input
+	Employee : class_name not a table name
+	name  	 : variable_name not a column name
+	
+--> @Query annotation must be used on the top of the abstract method.
+--> Must be define inside our RepositoryInterface.
+
+17 : what are collection Mapping Supported by Jpa?
+--> JPA support collections like : List, Set and Map
+
+--> we need to add @ElementCollection over variable
+--> It create one child table with 2/3 column
+	1 : key column   : Foreign key cloumn
+	2 : index column : Position of value in collection
+	3 : Element column : Actual data of collection
+	
+--> set only created two columns [ key , Element ] set does not follow "index column ".
+--> list and Map created three cloumn [key , Element , index ]
+
+18 : what is PlatfromTransactionManager?
+--> platfromTransactionManager is an interface that extends TransactionManager.
+--> TransactionManager handle the transection.
+--> @Transactional annotation which does " commit " if query is successfully executed.
+--> @Transactional annotation which does " RollBack " if query failed or throw exception.
+
+19 : how can be enable Spring data jpa?
+--> spring boot come with Auto Configuration if we add spring Data JPA dependency in pom.xml
+	1 : spring-boot-starter-data-jpa
+--> we must write some configuration in application.properties : database connection details
+	1 : url 
+	2 : username
+	3 : password
+	4 : database driver class
+
+20 : what is differnec between findById() or getOne()?
+--> findById() and getOne() both method are used to fetch one row data based on the primary key.
+--> findById() method present in CurdRepository.
+--> getOne() method present in Jparepository.
+--> if data is not found in findById() method it will return null , means its return types is Optional class.
+--> if data is not found in getOne() method it will throw an exception called " EntityNotFoundException".
+
+21 : what is the use of Dialect and give some Examples?
+--> Dialect is a class define in JPA. 
+--> All SQl query is generate bt Dialect.
+--> if we move from one Database to another Database Dialect property need to be modified in application.properties file.
+example :
+	Oracle10gDialect , MySQL8Dialect, PostgressDialect
+	
+22 : what is FetchType in JPA?
+---> It is used for SELECT operations for Association mapping or Collection Mapping
+---> If we want to fetch only parent data or fetch both parent and child data.
+
+--> they are two types of FetchType
+	1 : EAGER 
+	--> It is load parent Entity along with its associate child entities.[parent + child ]
+	2 : LAZY
+	--> It is load only parent entity from DB on select operations [ load parent data only]
+	--> later calling child get() method , load the child entity . [ when we call child class getter() method child entity is laoded]
+
+23 : what is the default FetchType in jpa?
+--> default FetchType based on operation we do.
+--> LAZY  : [to-many]
+	ont-to-many and many-to amny
+--> EAGER : [to-one]
+	one-to-one and many-to-one
+	
+24 : how can we see generate SQL at console/Log files?
+--> Data jpa by deafult generate SQl and it will not be shown.
+--> to view them go to application.propertie file add 
+	spring.jpa.show-sql=true
+	
+25 : what are differnt types of joins supported by Jpa.
+--> INNER JOIN | JOIN
+--> LEFT JOIN
+--> RIGHT JOIN
+--> FULL JOIN
+
+
+############################# spring security ############################
+
+
+
