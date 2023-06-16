@@ -648,6 +648,30 @@ example :
 --> FULL JOIN
 
 
+27 : when u get "TransientPropertyValueException" or what is the use of cascade attribute??
+-->  when dependency between two class when we get that exception.
+--> you have two class
+	1 : Student
+	2 : Address
+--> Student class dependent on address : [ one-to-one or one-to-many ]
+--> in parent class use 
+	@OneToOne(cascade= CascadeType.All)
+--> when we used cascade attribute the child entity perform operation and save after that parent entity perform an operation.
+
+
+27 : type of CascadeType?
+--> they are
+1 : ALL : is is do all the cascade operation
+2 : PERSIST : (save ) it is first save child and after that save parent
+3 : MERGE	:
+4 : REMOVE  : it is used to delete child first and parent 
+5 : REFRESH :
+6 : DETACH  :
+
+
+note : if we used cased then you dont want to save the child entity it will save automatically if we save parent entity.
+
+
 ############################# spring security ############################
 
 

@@ -18,7 +18,7 @@ Spring boot interview questions
 6 : fast developement (RAD : rapid application developement)
 
 3 : what is dependency injection?
---> dependency injection is a mechanisum to inject a object to a dependebt class.
+--> dependency injection is a mechanisum to inject a object to a dependent class.
 
 4 : what are the types of Dependency injection?
 --> they are 5 types of dependency injection.
