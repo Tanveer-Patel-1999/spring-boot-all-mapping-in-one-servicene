@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CourseRequest {
+public class CourseRequest extends CartResponse {
     private String courseName;
     private Double price;
     private Integer days;

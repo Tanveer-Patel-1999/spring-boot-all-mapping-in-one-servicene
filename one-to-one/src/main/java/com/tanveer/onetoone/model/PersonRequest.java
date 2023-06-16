@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonRequest {
+public class PersonRequest extends PersonResponse {
     private String firstName;
     private String lastName;
     private Integer age;

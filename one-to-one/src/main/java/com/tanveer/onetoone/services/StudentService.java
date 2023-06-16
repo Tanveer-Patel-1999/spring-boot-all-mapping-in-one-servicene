@@ -38,7 +38,7 @@ public class StudentService {
         courseEntity.setPrice(studentRequest.getCourse().getPrice());
         studentEntity.setCourse(courseEntity);
 
-        courseRepository.save(courseEntity);
+//        courseRepository.save(courseEntity);
         studentRepository.save(studentEntity);
 
         StudentResponse response = new StudentResponse();
@@ -108,7 +108,7 @@ public class StudentService {
             courseEntity.setPrice(studentRequest.getCourse().getPrice());
 
             studentEntity.setCourse(courseEntity);
-            courseRepository.save(courseEntity);
+//            courseRepository.save(courseEntity);
             studentRepository.save(studentEntity);
 
         }

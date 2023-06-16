@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentRequest  {
-
-    private String usn;
+public class StudentRequest extends StudentResponse {
 
     private String firstName;
     private String lastName;

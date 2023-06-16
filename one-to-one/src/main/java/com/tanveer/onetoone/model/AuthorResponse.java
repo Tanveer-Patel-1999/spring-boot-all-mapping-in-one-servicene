@@ -4,14 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartRequest extends CartResponse {
-
-    private String cartName;
-    private String cartType;
-    private List<ItemRequest> items;
+public class AuthorResponse {
+    private Long id;
 }

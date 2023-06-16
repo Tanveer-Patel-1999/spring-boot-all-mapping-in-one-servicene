@@ -1,6 +1,5 @@
 package com.tanveer.onetoone.entity;
 
-import com.tanveer.onetoone.model.CourseRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +22,7 @@ public class StudentEntity {
         private String lastName;
         @Column(name = "std_email")
         private String email;
-        @OneToOne
+        @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         @JoinColumn(name = "course_id")
         private CourseEntity course;
 
@@ -40,7 +39,7 @@ public class StudentEntity {
    used :
    1 :  @OneToOne
    2 :  @JoinColumn(name = "course_id") : used primary key of child classEntity
-   3:  private ChildClassEntity childClassEntity; : create an object of childEntity
+   3:   private ChildClassEntity childClassEntity; : create an object of childEntity
 
     step : 2
     ========
@@ -50,6 +49,28 @@ public class StudentEntity {
     1 : used @OneToOne(mappedBy = "childClassEntity") : mappedBy : used child classEntity object in
     @OneToOne(mappedBy = "course")
     private StudentEntity student; create an object of Parent class in the child class.
+
+    pojo classes:
+
+public class StudentRequest  {
+
+    private String usn;
+
+    private String firstName;
+    private String lastName;
+    private String email;
+    private CourseRequest course;
+}
+
+
+public class CourseRequest {
+    private String courseName;
+    private Double price;
+    private Integer days;
+}
+
+note : both instances name are same in EntityClass and Model class.
+
 
      */
 

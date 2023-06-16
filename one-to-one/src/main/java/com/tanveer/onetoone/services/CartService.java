@@ -38,7 +38,7 @@ public class CartService {
             itemEntity.setPrice(item.getPrice());
             itemEntity.setCart(cartEntity);
 
-            itemRepository.save(itemEntity);
+//            itemRepository.save(itemEntity);
             itemEntities.add(itemEntity);
         }
         cartEntity.setItems(itemEntities);
@@ -100,7 +100,6 @@ public class CartService {
             cartEntity.setCartType(cartRequest.getCartType());
 
             List<ItemEntity> itemEntities = new ArrayList<>();
-
             for (ItemRequest item : cartRequest.getItems()) {
                 Optional<ItemEntity> itemEntityOptional = itemRepository.findById(item.getId());
                 if (itemEntityOptional.isPresent()) {
@@ -108,13 +107,12 @@ public class CartService {
                     itemEntity.setItemName(item.getItemName());
                     itemEntity.setPrice(item.getPrice());
                     itemEntity.setCart(cartEntity);
-                    itemRepository.save(itemEntity);
+//                    itemRepository.save(itemEntity);
                     itemEntities.add(itemEntity);
                 }
             }
 
-            cartEntity.getItems().clear();
-            cartEntity.getItems().addAll(itemEntities);
+            cartEntity.setItems(itemEntities);
             cartRepository.save(cartEntity);
         }
         return cartRequest;
@@ -124,6 +122,13 @@ public class CartService {
         Optional<ItemEntity> itemEntityOptional = itemRepository.findById(id);
         if (itemEntityOptional.isPresent()) {
             itemRepository.deleteById(id);
+        }
+    }
+
+    public void deleteByCartId(Long id) {
+        Optional<CartEntity> cartEntity = cartRepository.findById(id);
+        if (cartEntity.isPresent()){
+            cartRepository.deleteById(id);
         }
     }
 }
