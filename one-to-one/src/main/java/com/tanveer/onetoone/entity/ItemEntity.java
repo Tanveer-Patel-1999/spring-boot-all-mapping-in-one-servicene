@@ -16,6 +16,7 @@ public class ItemEntity {
     private Long id;
     private String itemName;
     private Double price;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
     private CartEntity cart;
 }

@@ -21,8 +21,7 @@ public class CartEntity {
     private String cartName;
     @Column(name = "cart_type")
     private String cartType;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<ItemEntity> items;
 
 }
@@ -37,8 +36,9 @@ one to many
 
 2 : In child class
 --> used :
-    1 : @ManyToOne
-    2 : @JoinColumn(name = "parent_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private CartEntity cart;
     3 : private ParentEntity parent;  : create a ParentEntity an object in child class
 
 pojo :
