@@ -29,7 +29,6 @@ public class CartService {
         CartEntity cartEntity = new CartEntity();
         cartEntity.setCartName(cartRequest.getCartName());
         cartEntity.setCartType(cartRequest.getCartType());
-        cartRepository.save(cartEntity);
 
         List<ItemEntity> itemEntities = new ArrayList<>();
         for (ItemRequest item : cartRequest.getItems()) {
@@ -38,10 +37,10 @@ public class CartService {
             itemEntity.setPrice(item.getPrice());
             itemEntity.setCart(cartEntity);
 
-//            itemRepository.save(itemEntity);
             itemEntities.add(itemEntity);
         }
         cartEntity.setItems(itemEntities);
+        cartRepository.save(cartEntity);
 
         CartResponse response = new CartResponse();
         response.setId(cartEntity.getId());
@@ -60,6 +59,7 @@ public class CartService {
             List<ItemRequest> itemRequests = new ArrayList<>();
             for (ItemEntity itemEntity : items) {
                 ItemRequest item = new ItemRequest();
+                item.setId(itemEntity.getId());
                 item.setItemName(itemEntity.getItemName());
                 item.setPrice(itemEntity.getPrice());
                 itemRequests.add(item);
@@ -68,7 +68,6 @@ public class CartService {
         }
         return request;
     }
-
     public List<CartRequest> getAll() {
         return cartRepository.findAll().stream()
                 .map(cartEntity -> {

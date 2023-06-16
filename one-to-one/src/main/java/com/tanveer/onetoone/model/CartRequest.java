@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartRequest extends CartResponse {
+public class CartRequest {
 
     private String cartName;
     private String cartType;

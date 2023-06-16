@@ -22,7 +22,7 @@ public class CartEntity {
     @Column(name = "cart_type")
     private String cartType;
 
-    @OneToMany(mappedBy="cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ItemEntity> items;
 
 }
