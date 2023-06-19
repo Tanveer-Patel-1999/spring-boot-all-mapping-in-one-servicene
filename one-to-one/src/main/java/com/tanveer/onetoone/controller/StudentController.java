@@ -1,6 +1,5 @@
 package com.tanveer.onetoone.controller;
 
-import com.tanveer.onetoone.model.PersonRequest;
 import com.tanveer.onetoone.model.StudentRequest;
 import com.tanveer.onetoone.model.StudentResponse;
 import com.tanveer.onetoone.services.StudentService;

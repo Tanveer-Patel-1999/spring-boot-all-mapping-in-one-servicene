@@ -2,6 +2,7 @@ package com.tanveer.onetoone.services;
 
 import com.tanveer.onetoone.entity.CartEntity;
 import com.tanveer.onetoone.entity.ItemEntity;
+import com.tanveer.onetoone.exception.CartException;
 import com.tanveer.onetoone.model.CartRequest;
 import com.tanveer.onetoone.model.CartResponse;
 import com.tanveer.onetoone.model.ItemRequest;
@@ -66,6 +67,9 @@ public class CartService {
             }
             request.setItems(itemRequests);
         }
+        else {
+            throw new CartException("cart not found for id :"+id);
+        }
         return request;
     }
     public List<CartRequest> getAll() {
@@ -113,6 +117,9 @@ public class CartService {
 
             cartEntity.setItems(itemEntities);
             cartRepository.save(cartEntity);
+        }
+        else {
+            throw new CartException("cart not found for id :"+id);
         }
         return cartRequest;
     }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StudentRequest extends StudentResponse {
 
+    private String usn;
     private String firstName;
     private String lastName;
     private String email;
