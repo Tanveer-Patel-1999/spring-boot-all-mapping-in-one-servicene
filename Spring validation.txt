@@ -1,0 +1,107 @@
+Request validation and exception handling
+-----------------------------------------
+
+Spring validation
+=================
+--> by  using spring validation "you can restric the user to provides a correct input" .
+
+step :
+
+1 : first step :
+--> add dependency 
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+
+2 : --> go to your requestPojo add the validation annotations
+
+	1 : @NotNull(message = " user name should not be null)
+	--> we can not provides a null value
+	
+	2 : @Email( message = " provides a correct email address)
+	--> we can not provides incorrect email
+	
+	3 : @Pattern(regexp = "^//d{10}$" , message = "invalid mobile number)
+	--> for mobile number pattern
+	
+	4 : @Min(18)
+	--> minimumn age is 18 to used my application
+	
+	5 : @Max(65)
+	--> maximum age is 65 to used my application
+	
+	6 : @NotBlank()
+	--> it will check not_null and also check not_empty.
+	
+	
+example :
+	
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserRequest {
+
+    @NotNull(message = "Invalid Username")
+    private String name;
+    @Email(message = "Invalid email address ")
+    private String email;
+    @Pattern(regexp = "^//d{10}$" , message = "invalid mobile number")
+    private String mobile;
+    
+    @NotNull(message = "Please provides a gender")
+    private String gender;
+    
+    @Min(value = 18,message = "minimum age is 18 to used that application")
+    @Max(value = 50,message = "maximum age is 50 to used that application")
+    private Integer age;
+    
+    @NotBlank(message = "please provides your nationality")
+    private String nationality;
+}
+
+	
+3 : --> go to your controller  : inside the httpHandler method and used " @Valid " annotations to validation purpose.
+
+--> mainly used in POST and PUT call.
+
+example :
+	 @PostMapping("/create")
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) {
+        UserResponse response = userService.createUser(userRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+	
+	
+4 : --> handle MethodArgumentNotValidException : got to GlobalExceptionHandler class
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    
+//    handle validation exception : MethodArgumentNotValidException
+/*
+1 : used map<String , String>
+2 : pass the MethodArgumentNotValidException : and import it
+3 : annotate as methode as :  @ExceptionHandler(MethodArgumentNotValidException.class)
+4 : create a Map<> object : Map<String, String> errorMap = new HashMap<>();
+5 : used the object of MethodArgumentNotValidException to :
+    methodArgumentNotValidException.getBindingResult().getFieldErrors()
+             .forEach(error->{
+                 errorMap.put(error.getField(),error.getDefaultMessage());
+             });
+6 : Response status is BadRequest : @ResponseStatus(HttpStatus.BAD_REQUEST)
+ */
+ 
+ 
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> ArgumentNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
+     Map<String, String> errorMap = new HashMap<>();
+     methodArgumentNotValidException.getBindingResult().getFieldErrors()
+             .forEach(error->{
+                 errorMap.put(error.getField(),error.getDefaultMessage());
+             });
+     return errorMap;
+    }
+}
+
