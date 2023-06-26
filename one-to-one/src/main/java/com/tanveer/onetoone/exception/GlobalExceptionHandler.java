@@ -69,6 +69,7 @@ public class GlobalExceptionHandler {
              });
      return errorMap;
     }
+    
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotFoundException.class)
     public Map<String, String> handleUserNotFound(UserNotFoundException userNotFoundException){
@@ -76,5 +77,5 @@ public class GlobalExceptionHandler {
      errorMap.put("errorMessage",userNotFoundException.getMessage());
      return errorMap;
     }
-//    we we not used other exception that time used paren Exception.class
+//    we not used other exception that time used paren Exception.class
 }
