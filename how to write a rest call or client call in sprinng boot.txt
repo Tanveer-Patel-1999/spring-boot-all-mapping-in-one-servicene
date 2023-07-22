@@ -1,0 +1,157 @@
+how to write a rest call or client call
+=======================================
+1 : create a client package
+2 : create a Client Class in the client package
+3 : annotated a Client Class as a  : @Componenet
+4 : create an object of RestTemplate : @Autowired
+5 : create url for rest template which controller to you call : 
+		private static final String RETRIEVE_ACCOUNT_URI = "http://%s/v1/account/%s"; --> %s ={serviceHost} and next %s : id 
+6 : call the service name from the applicationproperties or anseable  : @Value
+		@Value("${patient.service.name}")
+		private final String ServiceName;
+7 : create a pojo classes
+8 : create an ServiceClientException class
+
+public class ServiceClientException extends RuntimeException {
+
+    private static final long serialVersionUID = -7210431808899939306L;
+
+    public ServiceClientException (String message) {
+        super(message);
+    }
+
+    public ServiceClientException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+		
+exmaple :
+	
+@GetMapping(path = "/v1/account/{accountId}")
+	public Account getAccount(@PathVariable("accountId") Long accountId) {
+		return patientService.getAccount(accountId);
+	}
+	
+	
+@GetMapping(path = "/person/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Person> getPersonBYId(@PathVariable Long id) {
+        Person person = consumerService.getPersonBYId(id);
+        return new ResponseEntity<>(person, HttpStatus.OK);
+    }
+
+		
+rest call for get by Id: GET call
+------------------------
+1 : way  : using String url and getForEntity()
+
+public Account retriveAccount(Long AccountId){
+	try{
+		String url = String.format(RETRIEVE_ACCOUNT_URI, patientServiceName, accountId);
+	    return restTemplate.getForEntity(url, Account.class).getBody();
+	} 
+	catch(HttpClientErrorException | HttpServerErrorException e) {
+	
+			log.error("Error retrieving account for accountId={}", accountId, e);
+			throw new PatientServiceException("Error retrieve account for accountId " + accountId, e);
+	}
+}
+
+2 : way : create an objecct of response entity and return using url with getForEntity()
+
+private static final String PERSON_URL = "http://{serviceHost}/v1/management/person/{personId}";
+
+public Person getPersonBYId(Long id) {
+        try {
+			String url = String.format(PERSON_URL ,PersonService, id)
+			ResponseEntity<Person> response = restTemplate.getForEntity(url,Person.class,id);
+			return response.getBody();
+
+        } catch (HttpClientErrorException | HttpServerErrorException exception) {
+            log.info("Error when trying to retrieve person for personId={}", id);
+            throw new ConsumerClientException(
+                    "Error when trying to retrieve person for personId= " + id);
+        }
+
+    }
+	
+3 : way  : using UriComponentsBuilder with getForEntity() method
+
+private static final String GET_ORGANIZATION_BY_ORG_ID = "http://{serviceHost}/v1/management/organization/{organizationId}";
+
+
+ public Organization retrieveOrganizationById(Long organizationId) {
+        try {
+            URI uri = UriComponentsBuilder.fromUriString(GET_ORGANIZATION_BY_ORG_ID)
+                    .buildAndExpand(practiceManagementServiceName, organizationId).toUri();
+					
+			ResponseEntity<Organization> response = restTemplate.getForEntity(uri.toString(), Organization.class);
+			return response.getBody();
+
+            return restTemplate.getForEntity(requestUri.toString(), Organization.class).getBody();
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            log.error("Unable to fetch organization for organizationId={}", organizationId, e);
+            throw new PracticeManagementClientException(
+                    "Error while fetch organization for organizationId=" + organizationId, e);
+        }
+    }
+
+4 : way  : using UriComponentsBuilder with exchange() Method.
+
+private static final String GET_ORGANIZATION_BY_ORG_ID = "http://{serviceHost}/v1/management/organization/{organizationId}";
+
+
+ public Organization retrieveOrganizationById(Long organizationId) {
+        try {
+		
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+		
+			HttpEntity<?> httpEntity = new HttpEntity<>(headers)
+		
+            URI uri = UriComponentsBuilder.fromUriString(GET_ORGANIZATION_BY_ORG_ID)
+                    .buildAndExpand(practiceManagementServiceName, organizationId).toUriString();
+					
+			ResponseEntity<Organization> response = restTemplate.exchange(uri, HttpMethod.GEt ,httpEntity , Organization.class);
+			return response.getBody();
+
+            return restTemplate.getForEntity(requestUri.toString(), Organization.class).getBody();
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            log.error("Unable to fetch organization for organizationId={}", organizationId, e);
+            throw new PracticeManagementClientException(
+                    "Error while fetch organization for organizationId=" + organizationId, e);
+        }
+    }
+	
+--> for list<>
+ResponseEntity<List<Transaction>> transactionsResponse = restTemplate
+.exchange(url, HttpMethod.POST, entity,new ParameterizedTypeReference<List<Transaction>>(){});
+
+
+--> getForEntity() : url , ClassName ,id
+--> exchange() : url , httpMethod , HttpEntity , className 
+--> getBody()
+
+
+1 : delete(URI url) : return type void : 
+	Delete the resources at the specified URL.
+	
+2 : exchange(URI url, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType)
+    exchange(URI url, HttpMethod method, HttpEntity<?> requestEntity, ParameterizedTypeReference<T> responseType) : List
+	
+	Execute the HTTP method to the given URI template, writing the given request entity to the request, and returns the response as ResponseEntity.
+	
+3 : getForEntity(String url, Class<T> responseType, Object... uriVariables)
+	Retrieve an entity by doing a GET on the specified URL.
+	
+4 : getForObject(String url, Class<T> responseType, Object... uriVariables)
+	Retrieve a representation by doing a GET on the specified URL.
+	
+5 : postForEntity(url , obje , responseType)
+	public ResponseEntity<Organization> createOrganization(Organization organization){
+	return restTemplate.postForEntity(Url,organization, Organization.class);
+}
+
+6 : Put(url , obje , responseType)
+	public void UpdateOrganization(Organization organization){
+	 restTemplate.postForEntity(Url,organization);
+}

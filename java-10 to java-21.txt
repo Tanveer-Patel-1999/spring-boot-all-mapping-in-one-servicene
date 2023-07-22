@@ -1,0 +1,73 @@
+java-10 to java-21
+==================
+1 : switch expression : break
+2 : var				  : var i;
+3 : Sealed classes	  : w
+4 : Record classes
+5 : Text Block
+6 : String Template
+
+
+
+1 : switch expression : break and arrow ->
+==========================================
+
+
+1 : in switch we used : after the case and break . 
+1 : in switch you can use lambda or [ arrow ->] instead of break.
+2 : using the colon [ : ] after case you used lambda or [ arrow -> ]
+ 
+ 
+before : we used break
+----------------------
+public class Java21Features {
+
+    public static void main(String[] args) {
+        String day = "sat";
+        String time = "";
+
+        switch (day){
+            case "sat", "sun":
+                time = "10am";
+                break;
+
+            case "mon", "wed", "fri":
+                time = "7am";
+                break;
+            default:
+                time = "8am";
+                break;
+        }
+        System.out.println(time);
+
+    }
+
+}
+
+after : we used arrow
+---------------------
+--> do not used colon  [ : ] and break instead  of that we used -> 
+
+public class Java21Features {
+    
+    public static void main(String[] args) {
+        String day = "sat";
+        String time = "";
+
+        switch (day){
+            case "sat", "sun" ->
+                time = "10am";
+
+            case "mon", "wed", "fri" ->
+                time = "7am";
+
+            default ->
+                time = "8am";
+
+        }
+        System.out.println(time);
+
+    }
+
+}
+

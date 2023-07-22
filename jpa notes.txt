@@ -1,0 +1,28 @@
+jpa notes
+-------
+jpa : java persistance api
+
+1 : dependency requires
+--> postgress sql
+--> jpa 
+
+2 : in application properties we required
+------------------------------------------
+--> we required 4 feilds
+1 : jdbc:url
+2 : username
+3 : password
+4 : driverClassName
+
+--> remaining feilds are ignored
+
+server.port=1234
+
+spring.datasource.url=jdbc:postgresql://localhost/spring-one-to-one
+spring.datasource.username=postgres
+spring.datasource.password=123456
+spring.datasource.driverClassName=org.postgresql.Driver
+
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.format_sql=true

@@ -1,0 +1,134 @@
+########### client class #####################
+
+@Slf4j
+@Component
+public class PatientServiceClient {
+
+	private static final String RETRIEVE_ACCOUNT_URI = "http://%s/v1/account/%s";
+
+	private static final String RETRIEVE_PATIENT_URI = "http://%s/v1/patient/%s";
+
+	@Value("${patient.service.name}")
+	private final String patientServiceName;
+
+	@Qualifier("loadBalancedClient")
+	private final RestTemplate restTemplate;
+
+	@Autowired
+	public PatientServiceClient(String patientServiceName, RestTemplate restTemplate) {
+		this.patientServiceName = patientServiceName;
+		this.restTemplate = restTemplate;
+	}
+
+	public Account retrieveAccount(long accountId) {
+		try {
+			String url = String.format(RETRIEVE_ACCOUNT_URI, patientServiceName, accountId);
+			log.info("Retrieving account for accountId={}", accountId);
+			return restTemplate.getForEntity(url, Account.class).getBody();
+		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			log.error("Error retrieving account for accountId={}", accountId, e);
+			throw new PatientServiceException("Error retrieve account for accountId " + accountId, e);
+		}
+	}
+
+	public Patient retrievePatient(Long patientId){
+		try {
+			String url = String.format(RETRIEVE_PATIENT_URI, patientServiceName, patientId);
+			log.info("Retrieving patient for patientId={}", patientId);
+			return restTemplate.getForEntity(url, Patient.class).getBody();
+		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			log.error("Error retrieving patient for patientId={}", patientId, e);
+			throw new PatientServiceException("Error retrieve patient for patientId " + patientId, e);
+		}
+	}
+}
+
+
+
+#####################Test case ########################################
+
+@ExtendWith(MockitoExtension.class)
+class PatientServiceClientTest {
+    private static final String PATIENT_SERVICE_HOST = "patientpay-patient-service";
+    private static final Long ACCOUNT_ID = 123L;
+    private static final Long PATIENT_ID = 12L;
+    private static final String RETRIEVE_ACCOUNT_URI = "http://%s/v1/account/%s";
+    private static final String RETRIEVE_PATIENT_URI = "http://%s/v1/patient/%s";
+    @Mock
+    private RestTemplate restTemplate;
+    @InjectMocks
+    private PatientServiceClient client;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        client = new PatientServiceClient(PATIENT_SERVICE_HOST, restTemplate);
+    }
+
+    @Test
+    public void testRetrieveAccount_Success() {
+        Account expectedAccount = new Account();
+        ResponseEntity<Account> responseEntity = new ResponseEntity<>(expectedAccount, HttpStatus.OK);
+
+        String accountUrl = String.format(RETRIEVE_ACCOUNT_URI, PATIENT_SERVICE_HOST, ACCOUNT_ID);
+        when(restTemplate.getForEntity(eq(accountUrl), eq(Account.class))).thenReturn(responseEntity);
+        Account actualAccount = client.retrieveAccount(ACCOUNT_ID);
+
+        assertEquals(expectedAccount, actualAccount);
+    }
+
+    @Test
+    public void testRetrieveAccount_HttpClientError() {
+        HttpClientErrorException exception = new HttpClientErrorException(HttpStatus.NOT_FOUND);
+
+        String accountUrl = String.format(RETRIEVE_ACCOUNT_URI, PATIENT_SERVICE_HOST, ACCOUNT_ID);
+        when(restTemplate.getForEntity(eq(accountUrl), eq(Account.class))).thenThrow(exception);
+
+        assertThrows(PatientServiceException.class, () -> client.retrieveAccount(ACCOUNT_ID));
+    }
+
+    @Test
+    public void testRetrieveAccount_HttpServerError() {
+        HttpServerErrorException exception = new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        String accountUrl = String.format(RETRIEVE_ACCOUNT_URI, PATIENT_SERVICE_HOST, ACCOUNT_ID);
+        when(restTemplate.getForEntity(eq(accountUrl), eq(Account.class))).thenThrow(exception);
+
+        assertThrows(PatientServiceException.class, () -> client.retrieveAccount(ACCOUNT_ID));
+    }
+
+    @Test
+    public void testRetrievePatient_Success() {
+
+        Patient expectedPatient = new Patient();
+        ResponseEntity<Patient> responseEntity = new ResponseEntity<>(expectedPatient, HttpStatus.OK);
+
+        String patientUrl = String.format(RETRIEVE_PATIENT_URI, PATIENT_SERVICE_HOST, PATIENT_ID);
+        when(restTemplate.getForEntity(eq(patientUrl), eq(Patient.class))).thenReturn(responseEntity);
+        Patient actualPatient = client.retrievePatient(PATIENT_ID);
+
+        assertEquals(expectedPatient, actualPatient);
+    }
+
+
+    @Test
+    public void testRetrievePatient_HttpClientError() {
+        HttpClientErrorException exception = new HttpClientErrorException(HttpStatus.NOT_FOUND);
+
+        String patientUrl = String.format(RETRIEVE_PATIENT_URI, PATIENT_SERVICE_HOST, PATIENT_ID);
+        when(restTemplate.getForEntity(eq(patientUrl), eq(Patient.class))).thenThrow(exception);
+
+        assertThrows(PatientServiceException.class, () -> client.retrievePatient(PATIENT_ID));
+    }
+
+    @Test
+    public void testRetrievePatient_HttpServerError() {
+        HttpServerErrorException exception = new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        String patientUrl = String.format(RETRIEVE_PATIENT_URI, PATIENT_SERVICE_HOST, PATIENT_ID);
+        when(restTemplate.getForEntity(eq(patientUrl), eq(Patient.class))).thenThrow(exception);
+
+        assertThrows(PatientServiceException.class, () -> client.retrievePatient(PATIENT_ID));
+    }
+
+}

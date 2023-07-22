@@ -20,31 +20,55 @@ public class ErrorDetails {
     private String details;
 }
 
-3 : craete GlobalExceptionHandler class 
+3: create Exception class :
+
+public class StudentNOtFoundException extends RuntimeException {
+
+    private static final long serialVersionUID = -7210431808899939306L;
+
+    public StudentException(String message)
+    {
+        super(message);
+    }
+
+    public StudentException(String message, Throwable cause)
+    {
+        super(message,cause);
+    }
+
+    public StudentException(Throwable cause) {
+        super(cause);
+    }
+}
+
+4 : craete GlobalExceptionHandler class 
 --> GlobalExceptionHandler is a commone class where we can handle the all exception.[ specific exception or globalException]
 --> annotated that class with @RestControllerAdvice or @ControllerAdvice
 --> @ControllerAdvice it is used handle the exception handle golbally
 --> 
     1 : create an exceptionMethod()
     2 : exceptionMethod() have two parameters
-        1 : exception class name
+        1 : exception class name : StudentNotFoundException
         2 : WebRequest : we can retrieve an url from web request and send the url to the client
     3 : create an Object of ErrorDetails class and fill the details
     4 : return the object
     5 : annotated a method with : @ExceptionHandler(ExceptionClassName.class)
      
-
-//handle specific exception
-@ExceptionHandler(StudentException.class)
-  public ResponseEntity<?> handleStudentNotFoundException(StudentException exception, WebRequest request){
-  ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false) );
-  return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-}
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
 
-//handle global exception
- @ExceptionHandler(Exception.class)
- public ResponseEntity<?> handleGlobalException(Exception exception, WebRequest request){
- ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false) );
- return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    //handle specific exception
+    @ExceptionHandler(StudentException.class)
+    public ResponseEntity<?> handleStudentNotFoundException(StudentException exception, WebRequest request){
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false) );
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    //handle global exception
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGlobalException(Exception exception, WebRequest request){
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false) );
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

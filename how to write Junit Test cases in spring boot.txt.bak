@@ -1,0 +1,86 @@
+how to write Junit Test cases in spring boot
+=============================================
+
+1 : controller test casese
+--------------------------
+--> create a package in the Test package : controller
+--> in controller package create a : ControllerClass
+
+step :
+
+1 : Inject the controller class using @InjectMock annoation
+
+	@InjectMocks
+    private PersonController sut;
+	
+2 : mock all the service which are called in the controller class using @Mock annoation
+	
+	@Mock
+    private PersonService personService;
+	
+3 : using JacksonTester<POJO> to used all pojo present in the controller class and create an object. : @RequeatBody pojo used jackJsonTest
+
+	private JacksonTester<PersonRequest> personRequestJacksonTester;
+	
+4 : craete an object of MockMvc 
+
+	private MockMvc mockMvc;
+	
+5 : create all HTTP url present in the controller
+
+	private static final String CREATE_PERSON = "/create";
+    private static final String GET_PERSON_BY_ID = "/getPerson/1";
+    private static final String GET_ALL_PERSON = "/getAll";
+    private static final String UPDATE_PERSON_BY_ID = "/person/1";
+    private static final String DELETE_PERSON_BY_ID = "/person/1";
+
+
+6 : create a setUp() method.
+--> annoatated that method as @BeforeEach
+
+	@BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
+        ObjectMapper mapper = new ObjectMapper();
+        JacksonTester.initFields(this, mapper);
+    }
+	
+	
+--> step to write a test cases
+	1 : create an object of RequestClass : A a = new A()
+	2 : used mockito.when
+		Mockito.when(serviceObjec.method_name(Mockito.any()).thenReturn(a);
+		
+	3 : mockMvc
+				.perform(MockMvcRequestBuilders.http_method_name(url))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jacksonTester_Pojo_name.write(pojo_object).getJson()))
+				.andExpect(MockMvcResultMatchers.status().isCreated())
+				.andReturn
+				.getResponse();
+	
+example :
+		mockMvc.perform(MockMvcRequestBuilders.post(CREATE_PERSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(personRequestJacksonTester.write(personRequest).getJson()))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andReturn()
+                .getResponse();
+				
+	4 : used Mockito.verify()
+	
+	        Mockito.verify(serviceObject, times(1)).method_name(Mockito.any(PersonRequest.class));
+			
+
+Void : return type test case
+=====	
+	
+note : when we used void return type then used : doNothing
+
+	        doNothing().when(serviceObject).deleteById(Mockito.anyLong());
+
+example :
+		     doNothing().when(personService).deleteById(Mockito.anyLong());
+
+	
